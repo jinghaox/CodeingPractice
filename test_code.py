@@ -1,3 +1,5 @@
 import os
 
-print(os.getcwd())
+# change back to py2 format
+print os.getcwd()
+
