@@ -1,3 +1,3 @@
-# CodeingPractice
+# CodingPractice
 # Testing
 # Branch test
