@@ -108,30 +108,7 @@ class Solution(object):
 
 
         # first add current node's value to runningSum
-        runningSum = runningSum + tree.node
-
-
-class Solution(object):
-    def print_branch_sum(self, tree):
-        sum_out = []
-        self.print_bs(tree, 0, sum_out)
-        print(sum_out)
-
-    def print_bs(self, tree, runningSum, sum_out):
-        # have two returns to break the recursion
-        # sum_out is updated during the call, so only return is enough, no need to return a value
-        # first is, if tree i None
-        if tree is None:
-            return
-
-
-        # first add current node's value to runningSum
         runningSum = runningSum + tree.value
-
-        # the recursive call can be put here, or after checking if the tree is leaf
-        # but must be after runningSum update
-        self.print_bs(tree.left, runningSum, sum_out)
-        self.print_bs(tree.right, runningSum, sum_out)
 
         # if we go to the leaf node, then it's time to append the runningSum to the output
         if tree.left is None and tree.right is None:
@@ -139,6 +116,11 @@ class Solution(object):
             # second 
             return
 
+        # the recursive call can be put here, or after checking if the tree is leaf
+        # but logically, it should be placed after checking the node is leaf or not
+        # here it means: if node is not leaf, then we need to count its left subtree and right subtree's sum
+        self.print_bs(tree.left, runningSum, sum_out)
+        self.print_bs(tree.right, runningSum, sum_out)
 
 
 tree = BT(1).insert([2, 3, 4, 5, 6])
