@@ -25,7 +25,7 @@ class BinaryTree(Node):
             return root
 
         return recur(self, arr, 0, len(arr))
-
+    
 def insert_recursion(arr, root):
     # this is an external function using recursion
     def insert(arr, root, i, n): 
@@ -113,23 +113,24 @@ def invert_BT(root):
     # root.left = invx(t)
     return root
 
-arr = [1,2,3,4,5,6,7,8]
+if __name__ == '__main__':
+    arr = [1,2,3,4,5,6,7,8]
 
-bt = insert_recusion(arr, None)
-# bt = insert_iteration(arr, None, 0, len(arr))
+    bt = insert_recursion(arr, None)
+    # bt = insert_iteration(arr, None, 0, len(arr))
 
-traverse_in_order(bt)
+    traverse_in_order(bt)
 
-print("\n============\n")
+    print("\n============\n")
 
-# create a dummy node 0
-bt = BinaryTree(0) 
-# here's the trick, not bt.insert_node only, need bt = bt.insert_node
-# it's like we start from a dummy or None node, 
-# and after the insertion, need to assign the output of bt.insert_node to bt
-bt = bt.insert_node(arr)
-traverse_in_order(bt)
-print("\n============\n")
-invert_BT(bt)
-traverse_in_order(bt)
+    # create a dummy node 0
+    bt = BinaryTree(0) 
+    # here's the trick, not bt.insert_node only, need bt = bt.insert_node
+    # it's like we start from a dummy or None node, 
+    # and after the insertion, need to assign the output of bt.insert_node to bt
+    bt = bt.insert_node(arr)
+    traverse_in_order(bt)
+    print("\n============\n")
+    invert_BT(bt)
+    traverse_in_order(bt)
 
