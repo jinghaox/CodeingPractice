@@ -28,14 +28,15 @@ def levenshtein_dist(str1, str2):
 
     for i in range(1, len(str1)+1):
         for j in range(1, len(str2)+1):
-            cost_1 = f[i][j-1] + 1
-            cost_2 = f[i-1][j] + 1 
+            # if the last chars are the same, can skip it
             if str1[i-1] == str2[j-1]:
-                ct = 0
+                f[i][j] = f[i-1][j-1]
             else:
-                ct = 1
-            cost_3 = f[i-1][j-1] + ct 
-            f[i][j] = min(cost_1, cost_2, cost_3)
+                # in this case, since last chars are not the same, so Ct is always 1
+                cost_1 = f[i][j-1] + 1
+                cost_2 = f[i-1][j] + 1 
+                cost_3 = f[i-1][j-1] + 1 
+                f[i][j] = min(cost_1, cost_2, cost_3)
     print_f(f, len(str1), len(str2))
     return f[-1][-1]
 
