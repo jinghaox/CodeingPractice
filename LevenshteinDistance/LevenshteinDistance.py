@@ -46,7 +46,7 @@ def print_f(m, row, col):
             print(str(m[i][j]) + ",", end = "")
         print("\n")
 
-s1 = "1test"
-s2 = "mte1s3t"
+s1 = "cart"
+s2 = "march"
 steps = levenshtein_dist(s1, s2)
 print(steps)
