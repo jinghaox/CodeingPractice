@@ -16,8 +16,16 @@
 #    total cost is f(i-1, j-1) + Ct, 
 #    where Ct can be 1 or 0 (if two chars to be sutstituted are the same) 
 # So f(i,j) = min(f(i-1,j-1)+1, f(i-1,j)+1, f(i-1,j-1) + 0/1)
+#        "" m a r c h 
+#      "" 0 1 2 3 4 5      # "" -> m, need Insert(1),     "" ->ma, need Insert(2)
+#      c  1 1 2 3 3 4      # ""c-> m, need substitude(1), ""c->ma, need substitude(1) + insertion(1), ""c->marc == ""->mar, 3 steps
+#      a  2 2 1 2 3        # ""ca->marc, 
+#      r  3
+#      t  4
+#        first column, ""->m, need insert(1); ""->ma, need insert(2)
 
 def levenshtein_dist(str1, str2):
+
     f = [[x for x in range(len(str2)+1)] for y in range(len(str1)+1)]
     for i in range(1, len(str1)+1):
         f[i][0] = i # f[i-1][0]+1 
@@ -28,7 +36,7 @@ def levenshtein_dist(str1, str2):
 
     for i in range(1, len(str1)+1):
         for j in range(1, len(str2)+1):
-            # if the last chars are the same, can skip it
+            # if the last chars are the same, can skip it, since no operation is needed
             if str1[i-1] == str2[j-1]:
                 f[i][j] = f[i-1][j-1]
             else:
@@ -40,6 +48,60 @@ def levenshtein_dist(str1, str2):
     print_f(f, len(str1), len(str2))
     return f[-1][-1]
 
+
+def levenshtein_dist_optimize(str1, str2):
+    """
+    Example: when i goes to 3
+
+      j   0 1 2 3 4
+    i    '' C A R T 
+    0  '' 0 1 2 3 4      <--- evenEdits
+    1  M  1 1 2 3 4      <--- oddEdits
+    2  A  2 2 1 2 3      <--- evenEdits
+    3  R  3 1 2 3 4      <--- currEdits (actually is the oddEdits of i = 1), then update currentEdits[0] to 3, then update currentEdit[1:4] one by one
+                                         so initial value is [3,1,2,3,4], after update it's [3,3,2,1,2]
+    4  C
+    5  H
+    """
+    small = str1 if len(str1) < len(str2) else str2
+    big = str1 if len(str1) >= len(str2) else str2
+    evenEdits = [x for x in range(len(small) + 1)]
+    oddEdits = [None for x in range(len(small) + 1)]
+    for i in range(1, len(big) + 1):
+        if i % 2 == 1:
+            currentEdits = oddEdits
+            previousEdits = evenEdits
+        else:
+            currentEdits = evenEdits
+            previousEdits = oddEdits
+        currentEdits[0] = i
+        for j in range(1, len(small) + 1):
+            if big[i - 1] == small[j - 1]:
+                currentEdits[j] = previousEdits[j - 1]
+            else:
+                currentEdits[j] = 1 + min(previousEdits[j - 1], previousEdits[j], currentEdits[j - 1])
+    return evenEdits[-1] if len(big) % 2 == 0 else oddEdits[-1]
+
+def levenshtein_dist_final(str1, str2):
+    # the above even, odd thing is tricky, actually what we need is two rows, and use a temp to swap those two rows
+    small = str1 if len(str1) < len(str2) else str2
+    big = str1 if len(str1) >= len(str2) else str2
+    prevEdits = [x for x in range(len(small) + 1)]
+    currEdits = [None for x in range(len(small) + 1)]
+    for i in range(1, len(big)+1):
+        currEdits[0] = i
+        for j in range(1, len(small)+1):
+            if big[i-1] == small[j-1]:
+                currEdits[j] = prevEdits[j-1]
+            else:
+                currEdits[j] = 1 + min(prevEdits[j - 1], prevEdits[j], currEdits[j-1])
+        temp = currEdits
+        currEdits = prevEdits
+        prevEdits = temp
+    
+    return prevEdits[-1]
+
+
 def print_f(m, row, col):
     # m is a 2d matrix
     for i in range(row+1): 
@@ -49,5 +111,5 @@ def print_f(m, row, col):
 
 s1 = "cart"
 s2 = "march"
-steps = levenshtein_dist(s1, s2)
+steps = levenshtein_dist_final(s1, s2)
 print(steps)
